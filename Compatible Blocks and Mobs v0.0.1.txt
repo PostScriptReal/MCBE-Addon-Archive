@@ -1,0 +1,9 @@
+ Blocks       Mobs
+-Cobblestone -Chicken
+-Dirt        -Cow
+-Grass       -Iron Golem
+-Gravel      -Pig
+-Oak Log     -Sheep
+-Oak Planks  -Zombie
+-Sand
+-Stone
