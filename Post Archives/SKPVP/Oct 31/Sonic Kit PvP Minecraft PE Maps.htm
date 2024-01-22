@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html class="js" lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#"><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style><script type="text/javascript" charset="UTF-8" async="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/cc.js"></script><script async="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/analytics.js"></script><script type="text/javascript" id="async-buttons" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/async-buttons.js"></script><script async="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/gtm.js"></script><script>/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+
+;// CONCATENATED MODULE: ../core/dist/flash-identifiers.js
+const FLASH_MIMETYPE = "application/x-shockwave-flash";
+const FUTURESPLASH_MIMETYPE = "application/futuresplash";
+const FLASH7_AND_8_MIMETYPE = "application/x-shockwave-flash2-preview";
+const FLASH_MOVIE_MIMETYPE = "application/vnd.adobe.flash.movie";
+const FLASH_ACTIVEX_CLASSID = "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000";
+
+;// CONCATENATED MODULE: ../core/dist/plugin-polyfill.js
+
+/**
+ * Replacement object for `MimeTypeArray` that lets us install new fake mime
+ * types.
+ *
+ * Unlike plugins we can at least enumerate mime types in Firefox, so we don't
+ * lose data.
+ *
+ * We also expose a method called `install` which adds a new plugin. This is
+ * used to falsify Flash detection. If the existing `navigator.mimeTypes` has an
+ * `install` method, you should not use `RuffleMimeTypeArray` as some other
+ * plugin emulator is already present.
+ */
+class RuffleMimeTypeArray {
+    constructor(mimeTypes) {
+        this.__mimeTypes = [];
+        this.__namedMimeTypes = {};
+        if (mimeTypes) {
+            for (let i = 0; i < mimeTypes.length; i++) {
+                this.install(mimeTypes[i]);
+            }
+        }
+    }
+    /**
+     * Install a MIME Type into the array.
+     *
+     * @param mimeType The mime type to install
+     */
+    install(mimeType) {
+        const index = this.__mimeTypes.length;
+        this.__mimeTypes.push(mimeType);
+        this.__namedMimeTypes[mimeType.type] = mimeType;
+        this[mimeType.type] = mimeType;
+        this[index] = mimeType;
+    }
+    item(index) {
+        // This behavior is done to emulate a 32-bit uint,
+        // which browsers use.
+        return this.__mimeTypes[index >>> 0];
+    }
+    namedItem(name) {
+        return this.__namedMimeTypes[name];
+    }
+    get length() {
+        return this.__mimeTypes.length;
+    }
+    [Symbol.iterator]() {
+        return this.__mimeTypes[Symbol.iterator]();
+    }
+}
+/**
+ * Equivalent object to `Plugin` that allows us to falsify plugins.
+ */
+class RufflePlugin extends RuffleMimeTypeArray {
+    constructor(name, description, filename) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.filename = filename;
+    }
+}
+/**
+ * Replacement object for `PluginArray` that lets us install new fake plugins.
+ *
+ * This object needs to wrap the native plugin array, since the user might have
+ * actual plugins installed. Firefox doesn't let us enumerate the array, though,
+ * which has some consequences. Namely, we can't actually perfectly wrap the
+ * native plugin array, at least unless there's some secret "unresolved object
+ * property name handler" that I've never known before in JS...
+ *
+ * We can still wrap `namedItem` perfectly at least.
+ *
+ * We also expose a method called `install` which adds a new plugin. This is
+ * used to falsify Flash detection. If the existing `navigator.plugins` has an
+ * `install` method, you should not use `RufflePluginArray` as some other plugin
+ * emulator is already present.
+ */
+class RufflePluginArray {
+    constructor(plugins) {
+        this.__plugins = [];
+        this.__namedPlugins = {};
+        for (let i = 0; i < plugins.length; i++) {
+            this.install(plugins[i]);
+        }
+    }
+    install(plugin) {
+        const index = this.__plugins.length;
+        this.__plugins.push(plugin);
+        this.__namedPlugins[plugin.name] = plugin;
+        this[plugin.name] = plugin;
+        this[index] = plugin;
+    }
+    item(index) {
+        // This behavior is done to emulate a 32-bit uint,
+        // which browsers use. Cloudflare's anti-bot
+        // checks rely on this.
+        return this.__plugins[index >>> 0];
+    }
+    namedItem(name) {
+        return this.__namedPlugins[name];
+    }
+    refresh() {
+        // Nothing to do, we just need to define the method.
+    }
+    [Symbol.iterator]() {
+        return this.__plugins[Symbol.iterator]();
+    }
+    get length() {
+        return this.__plugins.length;
+    }
+}
+/**
+ * A fake plugin designed to trigger Flash detection scripts.
+ */
+const FLASH_PLUGIN = new RufflePlugin("Shockwave Flash", "Shockwave Flash 32.0 r0", "ruffle.js");
+FLASH_PLUGIN.install({
+    type: FUTURESPLASH_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "spl",
+    enabledPlugin: FLASH_PLUGIN,
+});
+FLASH_PLUGIN.install({
+    type: FLASH_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "swf",
+    enabledPlugin: FLASH_PLUGIN,
+});
+FLASH_PLUGIN.install({
+    type: FLASH7_AND_8_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "swf",
+    enabledPlugin: FLASH_PLUGIN,
+});
+FLASH_PLUGIN.install({
+    type: FLASH_MOVIE_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "swf",
+    enabledPlugin: FLASH_PLUGIN,
+});
+/**
+ * Install a fake plugin such that detectors will see it in `navigator.plugins`.
+ *
+ * This function takes care to check if the existing implementation of
+ * `navigator.plugins` already accepts fake plugin entries. If so, it will use
+ * that version of the plugin array. This allows the plugin polyfill to compose
+ * across multiple plugin emulators with the first emulator's polyfill winning.
+ *
+ * @param plugin The plugin to install
+ */
+function installPlugin(plugin) {
+    if (!("install" in navigator.plugins) || !navigator.plugins["install"]) {
+        Object.defineProperty(navigator, "plugins", {
+            value: new RufflePluginArray(navigator.plugins),
+            writable: false,
+        });
+    }
+    const plugins = navigator.plugins;
+    plugins.install(plugin);
+    if (plugin.length > 0 &&
+        (!("install" in navigator.mimeTypes) || !navigator.mimeTypes["install"])) {
+        Object.defineProperty(navigator, "mimeTypes", {
+            value: new RuffleMimeTypeArray(navigator.mimeTypes),
+            writable: false,
+        });
+    }
+    const mimeTypes = navigator.mimeTypes;
+    for (let i = 0; i < plugin.length; i += 1) {
+        mimeTypes.install(plugin[i]);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/plugin-polyfill.ts
+// This file is compiled and then injected into content.ts's compiled form.
+
+installPlugin(FLASH_PLUGIN);
+
+/******/ })()
+;</script><script charset="utf-8" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/ruffle.js"></script><head><script src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/analytics_002.js" type="text/javascript"></script>
+<script type="text/javascript">window.addEventListener('DOMContentLoaded',function(){var v=archive_analytics.values;v.service='wb';v.server_name='wwwb-app227.us.archive.org';v.server_ms=257;archive_analytics.send_pageview({});});</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/bundle-playback.js" charset="utf-8"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/wombat.js" charset="utf-8"></script>
+<script>window.RufflePlayer=window.RufflePlayer||{};window.RufflePlayer.config={"autoplay":"on","unmuteOverlay":"hidden"};</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/ruffle_002.js"></script>
+<script type="text/javascript">
+  __wm.init("https://web.archive.org/web");
+  __wm.wombat("https://mcpedl.com/sonic-kit-pvp/?cookie_check=1","20201031164118","https://web.archive.org/","web","https://web-static.archive.org/_static/",
+	      "1604162478");
+</script>
+<link rel="stylesheet" type="text/css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://web.archive.org/web/20201031164118/https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M9FQZCX');</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="https://mcpedl.com/xmlrpc.php">
+<script id="Cookiebot" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/uc.js" data-cbid="35e63d8e-8751-4a42-b1d3-86dbf8daa60f" data-culture="EN" type="text/javascript"></script><title>Sonic Kit PvP | Minecraft PE Maps</title>
+
+<meta property="og:title" content="Sonic Kit PvP">
+<meta property="og:url" content="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/">
+<meta property="og:image" content="https://web.archive.org/web/20201031164118im_/https://mcpedl.com/wp-content/uploads/2019/10/sonic-kit-pvp_1.png">
+<meta property="og:site_name" content="MCPE DL">
+
+<script>document.documentElement.className = document.documentElement.className.replace("no-js","js");</script>
+<link rel="dns-prefetch" href="https://web.archive.org/web/20201031164118/https://use.fontawesome.com/">
+<link rel="dns-prefetch" href="https://web.archive.org/web/20201031164118/https://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="MCPE DL » Feed" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="MCPE DL » Comments Feed" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="MCPE DL » Sonic Kit PvP Comments Feed" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/feed/">
+<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.4.4"}};
+			/*! This file is auto-generated */
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="wp-block-library-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/style.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="and_comment-rating-field-plugin-rating-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/rating.css" type="text/css" media="all">
+<link rel="stylesheet" id="contact-form-7-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/styles.css" type="text/css" media="all">
+<style id="contact-form-7-inline-css" type="text/css">
+.wpcf7 .wpcf7-recaptcha iframe {margin-bottom: 0;}.wpcf7 .wpcf7-recaptcha[data-align="center"] > div {margin: 0 auto;}.wpcf7 .wpcf7-recaptcha[data-align="right"] > div {margin: 0 0 0 auto;}
+</style>
+<link rel="stylesheet" id="st-widget-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/style_003.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp_frontend_styles-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/frontend_004.css" type="text/css" media="all">
+<link rel="stylesheet" id="comment_front_styles-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/frontend_003.css" type="text/css" media="all">
+<link rel="stylesheet" id="sp_modal_styles-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/bootstrap-3-modal.css" type="text/css" media="all">
+<link rel="stylesheet" id="srv_front_styles-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/frontend.css" type="text/css" media="all">
+<link rel="stylesheet" id="sp_front_styles-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/frontend_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="subscription_front_styles-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/frontend_005.css" type="text/css" media="all">
+<link rel="stylesheet" id="parent-style-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="child-style-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/style_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="responsive-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/responsive.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/font-awesome.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="dashicons-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/dashicons.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-official-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/all.css" type="text/css" media="all" integrity="" crossorigin="anonymous">
+<link rel="stylesheet" id="font-awesome-official-v4shim-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/v4-shims.css" type="text/css" media="all" integrity="" crossorigin="anonymous">
+<style id="font-awesome-official-v4shim-inline-css" type="text/css">
+@font-face {
+font-family: "FontAwesome";
+src: url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-brands-400.eot"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-brands-400.eot#iefix") format("embedded-opentype"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-brands-400.woff2") format("woff2"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-brands-400.woff") format("woff"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-brands-400.ttf") format("truetype"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-brands-400.svg#fontawesome") format("svg");
+}
+
+@font-face {
+font-family: "FontAwesome";
+src: url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-solid-900.eot"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-solid-900.eot#iefix") format("embedded-opentype"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-solid-900.woff2") format("woff2"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-solid-900.woff") format("woff"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-solid-900.ttf") format("truetype"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+
+@font-face {
+font-family: "FontAwesome";
+src: url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-regular-400.eot"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-regular-400.eot#iefix") format("embedded-opentype"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-regular-400.woff2") format("woff2"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-regular-400.woff") format("woff"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-regular-400.ttf") format("truetype"),
+		url("https://web.archive.org/web/20201031164118im_/https://use.fontawesome.com/releases/v5.13.0/webfonts/fa-regular-400.svg#fontawesome") format("svg");
+unicode-range: U+F004-F005,U+F007,U+F017,U+F022,U+F024,U+F02E,U+F03E,U+F044,U+F057-F059,U+F06E,U+F070,U+F075,U+F07B-F07C,U+F080,U+F086,U+F089,U+F094,U+F09D,U+F0A0,U+F0A4-F0A7,U+F0C5,U+F0C7-F0C8,U+F0E0,U+F0EB,U+F0F3,U+F0F8,U+F0FE,U+F111,U+F118-F11A,U+F11C,U+F133,U+F144,U+F146,U+F14A,U+F14D-F14E,U+F150-F152,U+F15B-F15C,U+F164-F165,U+F185-F186,U+F191-F192,U+F1AD,U+F1C1-F1C9,U+F1CD,U+F1D8,U+F1E3,U+F1EA,U+F1F6,U+F1F9,U+F20A,U+F247-F249,U+F24D,U+F254-F25B,U+F25D,U+F267,U+F271-F274,U+F279,U+F28B,U+F28D,U+F2B5-F2B6,U+F2B9,U+F2BB,U+F2BD,U+F2C1-F2C2,U+F2D0,U+F2D2,U+F2DC,U+F2ED,U+F328,U+F358-F35B,U+F3A5,U+F3D1,U+F410,U+F4AD;
+}
+</style>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/jquery.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/jquery-migrate.min.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var reports = {"ajaxUrl":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/wp-admin\/admin-ajax.php","username":"","user_id":"0","post_id":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/sonic-kit-pvp\/"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/comment-reply.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/jquery-min.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var bucketLink = "https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/s3.us-east-2.amazonaws.com\/mcpedl\/worlds\/3032\/";
+var Param = {"postId":"135081","ajaxUrl":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/custom_content_single.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var notification_vars = {"postID":"135081","uid":"0","ajaxUrl":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/notifications.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/video-adaptive.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/jquery.lazy.min.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/index.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/current-comment.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/jquery.flexslider.min.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var skin_vars = {"search":"","skinbase":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/skins\/","catbase":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/skincategory\/"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/front.js"></script>
+<link rel="https://api.w.org/" href="https://mcpedl.com/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://mcpedl.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://mcpedl.com/wp-includes/wlwmanifest.xml">
+<meta name="generator" content="WordPress 5.4.4">
+<link rel="canonical" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/">
+<link rel="shortlink" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/?p=135081">
+<link rel="alternate" type="application/json+oembed" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F&amp;format=xml">
+<script charset="utf-8" type="text/javascript">var switchTo5x=true;</script>
+<script charset="utf-8" type="text/javascript" id="st_insights_js" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/buttons.js"></script>
+<script charset="utf-8" type="text/javascript">stLight.options({"publisher":"6fe55251-1529-4174-9fa2-0c44db7fde45","doNotCopy":true,"hashAddressBar":false,"doNotHash":true});var st_type="wordpress4.9.9";</script>
+<script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//web.archive.org/web/20201031164118/https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-70241330-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+<link rel="shortcut icon" href="https://web.archive.org/web/20201031164118im_/https://mcpedl.com/wp-content/uploads/2014/04/mcpedlnotext.png">
+<!--[if lt IE 9]>
+<script src="https://mcpedl.com/wp-content/themes/hueman/js/ie/html5.js"></script>
+<script src="https://mcpedl.com/wp-content/themes/hueman/js/ie/selectivizr.js"></script>
+<![endif]-->
+<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style> <meta name="onesignal" content="wordpress-plugin">
+<script>
+
+      window.OneSignal = window.OneSignal || [];
+
+      OneSignal.push( function() {
+        OneSignal.SERVICE_WORKER_UPDATER_PATH = "OneSignalSDKUpdaterWorker.js.php";
+        OneSignal.SERVICE_WORKER_PATH = "OneSignalSDKWorker.js.php";
+        OneSignal.SERVICE_WORKER_PARAM = { scope: '/' };
+
+        OneSignal.setDefaultNotificationUrl("https://web.archive.org/web/20201031164118/https://mcpedl.com");
+        var oneSignal_options = {};
+        window._oneSignalInitOptions = oneSignal_options;
+
+        oneSignal_options['wordpress'] = true;
+oneSignal_options['appId'] = '5eea5e6f-7003-4887-87fa-3f4ded86abec';
+oneSignal_options['welcomeNotification'] = { };
+oneSignal_options['welcomeNotification']['title'] = "";
+oneSignal_options['welcomeNotification']['message'] = "";
+oneSignal_options['path'] = "https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-content/plugins/onesignal-free-web-push-notifications/sdk_files/";
+oneSignal_options['safari_web_id'] = "web.onesignal.auto.67c39979-7446-4274-a748-fcdf2406257a";
+oneSignal_options['promptOptions'] = { };
+                OneSignal.init(window._oneSignalInitOptions);
+                      });
+
+      function documentInitOneSignal() {
+        var oneSignal_elements = document.getElementsByClassName("OneSignal-prompt");
+
+        var oneSignalLinkClickHandler = function(event) { OneSignal.push(['registerForPushNotifications']); event.preventDefault(); };        for(var i = 0; i < oneSignal_elements.length; i++)
+          oneSignal_elements[i].addEventListener('click', oneSignalLinkClickHandler, false);
+      }
+
+      if (document.readyState === 'complete') {
+           documentInitOneSignal();
+      }
+      else {
+           window.addEventListener("load", function(event){
+               documentInitOneSignal();
+          });
+      }
+    </script>
+<style type="text/css">
+/* Dynamic CSS: For no styles in head, copy and put the css below in your child theme's style.css, disable dynamic styles */
+.boxed #wrapper, .container-inner { max-width: 1100px; }
+
+::selection { background-color: #2d730a; }
+::-moz-selection { background-color: #2d730a; }
+
+a,
+.themeform label .required,
+#flexslider-featured .flex-direction-nav .flex-next:hover,
+#flexslider-featured .flex-direction-nav .flex-prev:hover,
+.post-hover:hover .post-title a,
+.post-title a:hover,
+.s1 .post-nav li a:hover i,
+.content .post-nav li a:hover i,
+.post-related a:hover,
+.s1 .widget_rss ul li a,
+#footer .widget_rss ul li a,
+.s1 .widget_calendar a,
+#footer .widget_calendar a,
+.s1 .alx-tab .tab-item-category a,
+.s1 .alx-posts .post-item-category a,
+.s1 .alx-tab li:hover .tab-item-title a,
+.s1 .alx-tab li:hover .tab-item-comment a,
+.s1 .alx-posts li:hover .post-item-title a,
+#footer .alx-tab .tab-item-category a,
+#footer .alx-posts .post-item-category a,
+#footer .alx-tab li:hover .tab-item-title a,
+#footer .alx-tab li:hover .tab-item-comment a,
+#footer .alx-posts li:hover .post-item-title a,
+.comment-tabs li.active a,
+.comment-awaiting-moderation,
+.child-menu a:hover,
+.child-menu .current_page_item > a,
+.wp-pagenavi a { color: #2d730a; }
+
+.themeform input[type="submit"],
+.themeform button[type="submit"],
+.s1 .sidebar-top,
+.s1 .sidebar-toggle,
+#flexslider-featured .flex-control-nav li a.flex-active,
+.post-tags a:hover,
+.s1 .widget_calendar caption,
+#footer .widget_calendar caption,
+.author-bio .bio-avatar:after,
+.commentlist li.bypostauthor > .comment-body:after,
+.commentlist li.comment-author-admin > .comment-body:after { background-color: #2d730a; }
+
+.post-format .format-container { border-color: #2d730a; }
+
+.s1 .alx-tabs-nav li.active a,
+#footer .alx-tabs-nav li.active a,
+.comment-tabs li.active a,
+.wp-pagenavi a:hover,
+.wp-pagenavi a:active,
+.wp-pagenavi span.current { border-bottom-color: #2d730a!important; }				
+				
+.site-title a img { max-height: 100px; }
+</style>
+<style type="text/css" id="wp-custom-css">
+			.heading{
+	margin-top: 1em;
+}		</style>
+<script src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/OneSignalPageSDKES6.js" async=""></script><link rel="stylesheet" type="text/css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/buttons-secure.css"><script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/get_counts"></script><style type="text/css" id="CookieConsentStateDisplayStyles">.cookieconsent-optin,.cookieconsent-optin-preferences,.cookieconsent-optin-statistics,.cookieconsent-optin-marketing{display:block;display:initial;}.cookieconsent-optout-preferences,.cookieconsent-optout-statistics,.cookieconsent-optout-marketing,.cookieconsent-optout{display:none;}</style></head>
+<body class="world-template-default single single-world postid-135081 col-2cl full-width topbar-enabled unknown s1-collapse s2-collapse"><!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<script>__wm.rw(0);</script>
+<div id="wm-ipp-base" lang="en" style="display: block; direction: ltr;">
+</div><div id="wm-ipp-print">The Wayback Machine - https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/?cookie_check=1</div>
+<script type="text/javascript">//<![CDATA[
+__wm.bt(725,27,25,2,"web","https://mcpedl.com/sonic-kit-pvp/?cookie_check=1","20201031164118",1996,"https://web-static.archive.org/_static/",["https://web-static.archive.org/_static/css/banner-styles.css?v=S1zqJCYt","https://web-static.archive.org/_static/css/iconochive.css?v=qtvMKcIJ"], false);
+  __wm.rw(1);
+//]]></script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+ 
+
+<noscript><iframe src="https://web.archive.org/web/20201031164118if_/https://www.googletagmanager.com/ns.html?id=GTM-M9FQZCX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<div id="wrapper">
+<header id="header">
+<nav class="nav-container group" id="nav-topbar">
+<div class="nav-toggle"><i class="fa fa-bars"></i></div>
+<div class="nav-text"></div>
+<div class="nav-wrap container"><ul id="menu-menutop" class="nav container-inner group"><li id="menu-item-112" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-112"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/">Start</a></li>
+<li id="menu-item-99" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-99"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/mods/">Mods</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-39376" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-39376"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/mods/addons/">Add-ons</a></li>
+<li id="menu-item-122465" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-122465"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/mods/scripts/">Scripts</a></li>
+<li id="menu-item-39375" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-39375"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/mods/modpe/">ModPE</a></li>
+<li id="menu-item-39377" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-39377"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/mods/blocklauncher-addons/">BlockLauncher Addons</a></li>
+</ul>
+</li>
+<li id="menu-item-181" class="menu-item menu-item-type-taxonomy menu-item-object-category current-world-ancestor current-menu-parent current-world-parent menu-item-has-children menu-item-181"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/maps/">Maps</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-43751" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-43751"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/mcworld/">.McWorld</a></li>
+<li id="menu-item-52586" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-52586"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/mctemplate/">.McTemplate</a></li>
+<li id="menu-item-777" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-777"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/adventure-maps/">Adventure</a></li>
+<li id="menu-item-778" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-778"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/creation-maps/">Creation</a></li>
+<li id="menu-item-6763" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6763"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/ctm-maps/">CTM</a></li>
+<li id="menu-item-779" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-779"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/custom-terrain-maps/">Custom Terrain</a></li>
+<li id="menu-item-4480" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4480"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/minigame-maps/">Minigame</a></li>
+<li id="menu-item-33785" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-33785"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/modded-maps/">Modded</a></li>
+<li id="menu-item-835" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-835"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/parkour-maps/">Parkour</a></li>
+<li id="menu-item-780" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-780"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/puzzle-maps/">Puzzle</a></li>
+<li id="menu-item-781" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-781"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/pvp-maps/">PvP</a></li>
+<li id="menu-item-10503" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10503"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/redstone-maps/">Redstone</a></li>
+<li id="menu-item-782" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-782"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/roller-coaster-maps/">Roller Coaster</a></li>
+<li id="menu-item-783" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-783"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/survival-maps/">Survival</a></li>
+</ul>
+</li>
+<li id="menu-item-114974" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-114974"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/servers/">Servers</a></li>
+<li id="menu-item-12691" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-12691"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/skins/">Skins</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-107501" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-107501"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/skin-packs/">Skin Packs</a></li>
+</ul>
+</li>
+<li id="menu-item-239" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-239"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/texture-packs/">Texture Packs</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-973" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-973"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/16x16/">16×16</a></li>
+<li id="menu-item-974" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-974"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/32x32/">32×32</a></li>
+<li id="menu-item-975" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-975"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/64x64/">64×64</a></li>
+<li id="menu-item-976" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-976"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/128x128/">128×128</a></li>
+<li id="menu-item-22227" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-22227"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/shaders/">Shaders</a></li>
+</ul>
+</li>
+<li id="menu-item-111" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-111"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/seeds/">Seeds</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-126646" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-126646"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-10-seeds/">1.10+</a></li>
+<li id="menu-item-119371" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-119371"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-9-seeds/">1.9+</a></li>
+<li id="menu-item-116562" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-116562"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-6-seeds/">1.6+</a></li>
+<li id="menu-item-108363" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-108363"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-5-seeds/">1.5+</a></li>
+<li id="menu-item-112395" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-112395"><a href="#">Archive</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-102214" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-102214"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-4-seeds/">1.4+</a></li>
+<li id="menu-item-97922" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-97922"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-3-seeds/">1.3+</a></li>
+<li id="menu-item-76621" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-76621"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-2-seeds/">1.2+</a></li>
+<li id="menu-item-61863" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-61863"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-1-0-seeds/">1.1.0+</a></li>
+<li id="menu-item-38534" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38534"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-16-0-seeds/">0.16.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-48050" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-48050"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-0-0-seeds/">1.0.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-65063" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-65063"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-0-7-seeds/">1.0.7</a></li>
+<li id="menu-item-59714" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-59714"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-0-5-seeds/">1.0.5</a></li>
+<li id="menu-item-56457" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-56457"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/1-0-4-seeds/">1.0.4</a></li>
+</ul>
+</li>
+<li id="menu-item-44291" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-44291"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-16-2-seeds/">0.16.2</a></li>
+<li id="menu-item-42631" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-42631"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-16-1-seeds/">0.16.1</a></li>
+</ul>
+</li>
+<li id="menu-item-31199" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31199"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-0-seeds/">0.15.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-38510" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-38510"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-9-seeds/">0.15.9</a></li>
+<li id="menu-item-39189" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-39189"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-8-seeds/">0.15.8</a></li>
+<li id="menu-item-38612" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-38612"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-7-seeds/">0.15.7</a></li>
+<li id="menu-item-37478" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-37478"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-6-seeds/">0.15.6</a></li>
+<li id="menu-item-36519" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36519"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-4-seeds/">0.15.4</a></li>
+<li id="menu-item-36034" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36034"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-3-seeds/">0.15.3</a></li>
+<li id="menu-item-36033" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36033"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-2-seeds/">0.15.2</a></li>
+<li id="menu-item-33925" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-33925"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-15-1-seeds/">0.15.1</a></li>
+</ul>
+</li>
+<li id="menu-item-26864" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-26864"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-14-0-seeds/">0.14.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-32595" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-32595"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-14-3-seeds/">0.14.3</a></li>
+<li id="menu-item-31825" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-31825"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-14-2-seeds/">0.14.2</a></li>
+<li id="menu-item-30673" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30673"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-14-1-seeds/">0.14.1</a></li>
+</ul>
+</li>
+<li id="menu-item-23436" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-23436"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-13-0-seeds/">0.13.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-27326" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27326"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-13-2-seeds/">0.13.2</a></li>
+<li id="menu-item-25180" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-25180"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-13-1-seeds/">0.13.1</a></li>
+</ul>
+</li>
+<li id="menu-item-19268" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-19268"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-12-0-seeds/">0.12.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-23003" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-23003"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-12-3-seeds/">0.12.3</a></li>
+<li id="menu-item-22513" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-22513"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-12-2-seeds/">0.12.2</a></li>
+<li id="menu-item-19308" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-19308"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-12-1-seeds/">0.12.1</a></li>
+</ul>
+</li>
+<li id="menu-item-11938" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-11938"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-11-0-seeds/">0.11.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-15480" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15480"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-11-2-seeds/">0.11.2</a></li>
+<li id="menu-item-15479" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15479"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-11-1-seeds/">0.11.1</a></li>
+</ul>
+</li>
+<li id="menu-item-4481" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-4481"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-10-0-seeds/">0.10.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-7829" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7829"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-10-5-seeds/">0.10.5</a></li>
+<li id="menu-item-6080" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6080"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-10-4-seeds/">0.10.4</a></li>
+<li id="menu-item-5952" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5952"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-10-3-seeds/">0.10.3</a></li>
+<li id="menu-item-5878" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5878"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-10-1-seeds/">0.10.1</a></li>
+</ul>
+</li>
+<li id="menu-item-1359" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1359"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-9-0-seeds/">0.9.0+</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-2015" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2015"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-9-5-seeds/">0.9.5</a></li>
+<li id="menu-item-1860" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1860"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-9-4-seeds/">0.9.4</a></li>
+<li id="menu-item-1833" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1833"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-9-3-seeds/">0.9.3</a></li>
+</ul>
+</li>
+<li id="menu-item-1355" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1355"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/0-8-1-seeds/">0.8.1</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-138646" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-138646"><a href="#">Install Guides</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-138647" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-138647"><a href="#">Mods / Add-ons</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-138649" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138649"><a title="How to Install Minecraft PE Mods / Addons for Android" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-mods-for-android/">Android</a></li>
+<li id="menu-item-138650" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138650"><a title="How to Install Minecraft PE Mods / Addons for iOS" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-mods-for-ios/">iOS</a></li>
+<li id="menu-item-138648" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138648"><a title="How to Install Minecraft PE Addons / Mods for Windows 10 Edition" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-addons-for-windows-10/">Windows 10</a></li>
+</ul>
+</li>
+<li id="menu-item-138651" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-138651"><a href="#">Maps</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-138652" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138652"><a title="How to Install Minecraft PE Maps for Android" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-maps-for-android/">Android</a></li>
+<li id="menu-item-138653" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138653"><a title="How to Install Minecraft PE Maps for iOS" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-maps-for-ios/">iOS</a></li>
+<li id="menu-item-138654" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138654"><a title="How to Install Minecraft PE Maps for Minecraft: Windows 10 Edition" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/install-maps-minecraft-windows-10-edition/">Windows 10</a></li>
+</ul>
+</li>
+<li id="menu-item-138655" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-138655"><a href="#">Texture Packs</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-138656" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138656"><a title="How to Install Minecraft PE Resource / Texture Packs for Android" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-texture-packs-for-android/">Android</a></li>
+<li id="menu-item-138658" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138658"><a title="How to Install Minecraft PE Texture / Resource Packs for iOS" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-texture-packs-for-ios/">iOS</a></li>
+<li id="menu-item-138657" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138657"><a title="How to Install Minecraft PE Resource / Texture Packs for Windows 10 Edition" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-texture-packs-for-windows-10-edition/">Windows 10</a></li>
+</ul>
+</li>
+<li id="menu-item-138659" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-138659"><a href="#">Skins</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-138660" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138660"><a title="How to Install Minecraft PE Skins for Android" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-skins-for-android/">Android</a></li>
+<li id="menu-item-138661" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138661"><a title="How to Install Minecraft PE Skins for iOS" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-skins-for-ios/">iOS</a></li>
+<li id="menu-item-138662" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138662"><a title="How to Install Minecraft PE Skins for Windows 10 Edition" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-skins-for-windows-10-edition/">Windows 10</a></li>
+</ul>
+</li>
+<li id="menu-item-138664" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-138664"><a href="#">Uninstall</a>
+<ul class="sub-menu" style="display: none;">
+<li id="menu-item-138663" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138663"><a title="How to Uninstall Addons, Texture Packs and Maps for iOS" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/uninstall-addons-texture-packs-maps-ios/">iOS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-138644" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-138644"><a href="https://web.archive.org/web/20201031164118/https://my.mcpedl.com/">Submission</a></li>
+</ul></div>
+<div class="container">
+<div class="container-inner">
+<div class="toggle-search"><i class="fa fa-search"></i></div>
+<div class="search-expand">
+<div class="search-expand-inner">
+<form method="get" class="searchform themeform" action="https://web.archive.org/web/20201031164118/https://mcpedl.com/">
+<div>
+<input type="text" class="search" name="s" onblur="if(this.value=='')this.value='To search type and hit enter';" onfocus="if(this.value=='To search type and hit enter')this.value='';" value="To search type and hit enter">
+</div>
+</form> </div>
+</div>
+</div>
+</div>
+</nav>
+<div class="container group">
+<div class="container-inner">
+<div class="group pad">
+<p class="site-title"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/" rel="home"><img src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/dllogonew.png" alt="MCPE DL"></a></p>
+<p class="site-description">Mods, Maps, Skins, Seeds, Texture Packs</p> </div>
+</div>
+</div>
+</header>
+<div class="container" id="page">
+<div class="container-inner">
+<div class="main">
+<div class="main-inner group"><section class="content">
+<div class="page-title pad group">
+<ul class="meta-single group">
+<li class="category"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/category/maps/" rel="category tag">Minecraft PE Maps</a></li>
+
+<div id="subscription">
+<button class="btn btn-success" id="subscribe-button">
+<i class="far fa-bell"></i>Subscribe
+</button>
+<span class="tip">Subscribe to notifications</span>
+</div> </ul>
+</div>
+<div class="pad group">
+<article class="post-135081 world type-world status-publish has-post-thumbnail hentry category-maps tag-mcworld tag-pvp-maps version-1-10 version-1-11 version-1-12 version-1-13 version-1-8 version-1-9-beta">
+<div class="post-inner group">
+
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" class="creator-avatar">
+<img src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/423fd709007d6749af06341a9751a9a4.png" alt="creator-avatar">
+</a>
+<p class="post-byline">
+By <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" title="Posts by Popularsonic" rel="author">Popularsonic</a> <br>
+Published on October 21, 2019 <a href="#changelog">(Updated on October 26, 2019)</a></p> <h1 class="post-title">
+Sonic Kit PvP </h1>
+
+<div id="claim-alerts"></div>
+
+<div class="clear"></div>
+<div class="entry">
+<div class="entry-inner">
+
+<p class="no-break"><span class="st_facebook_hcount" st_title="Sonic Kit PvP" st_url="https://mcpedl.com/sonic-kit-pvp/" st_processed="yes"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span><span class="stMainServices st-facebook-counter" style="background-image: url(&quot;https://web.archive.org/web/20201101180248/https://ws.sharethis.com/images/2017/facebook_counter.png&quot;);">&nbsp;</span><span class="stArrow"><span class="stButton_gradient stHBubble"><span class="stBubble_hcount"></span></span></span></span></span></span> <span st_via="MCPEDL" st_username="MCPEDL" class="st_twitter_hcount" st_title="Sonic Kit PvP" st_url="https://mcpedl.com/sonic-kit-pvp/" st_processed="yes"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span><span class="stMainServices st-twitter-counter" style="background-image: url(&quot;https://web.archive.org/web/20201101180248/https://ws.sharethis.com/images/2017/twitter_counter.png&quot;);">&nbsp;</span><span class="stArrow"><span class="stButton_gradient stHBubble"><span class="stBubble_hcount"></span></span></span></span></span></span> <span st_title="Sonic Kit PvP" st_url="https://mcpedl.com/sonic-kit-pvp/" class="st_sharethis_hcount" st_processed="yes"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span><span class="stMainServices st-sharethis-counter" style="background-image: url(&quot;https://web.archive.org/web/20201101180248/https://ws.sharethis.com/images/2017/sharethis_counter.png&quot;);">&nbsp;</span><span class="stArrow"><span class="stButton_gradient stHBubble"><span class="stBubble_hcount"></span></span></span></span></span></span></p><p>This
+ is the kit PvP map made by Popularsonic(me), the map has 3 kits(I will 
+add more If I want to). This map is made out of complex Commands, enjoy 
+my first Kit PvP map</p>
+
+<div class="ZYpYmPv5" style="clear:both;float:left;width:100%;margin:0 0 20px 0;">
+<div id="div-gpt-ad-1583174787470-3" class="ads-j-center"></div></div>
+<p></p>
+<p><img width="100%" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/sonic-kit-pvp_2.gif"><img width="100%" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/sonic-kit-pvp_3.gif"><span style="background-color: rgb(0, 255, 255);">This map supports versions 1.8 and above</span></p>
+<p>The map has a spectate portal that, when entered, takes you to the 
+spectator area, and a door which opens when you get close enough, name 
+tags to identify Kits and is also used for navigation. This map will get
+ updated over time, again, enjoy the Kit PvP map!<img width="100%" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/sonic-kit-pvp_4.gif"></p>
+<p></p>
+
+<div id="changelog"></div>
+<div class="form-group">
+<label for="version-select">Select version for changelog:</label>
+<select class="form-control" id="version-select">
+<option value="1.0.1">1.0.1</option>
+<option value="1.0.2">1.0.2</option>
+<option value="1.0.3" selected="selected">1.0.3</option>
+</select>
+</div>
+<div id="changelogs">
+<div class="changelog-header">
+Changelog
+<span class="pull-right spoiler-link"><a href="#">View more<i class="fa fa-angle-down"></i></a></span>
+</div>
+<div class="changelog" data-version="1.0.1">
+<p>- Changes to post to get it accepted after being denied</p><p>-Fixed the .mcworld and .zip files</p> </div>
+<div class="changelog" data-version="1.0.2">
+<p>- Added Ranger kit</p><p>- Added Summoner kit</p><p>- Added Guardian kit</p><p>- Nerfed the tank kit</p><p>- Bug fixes</p> </div>
+<div class="changelog active" data-version="1.0.3">
+<p>- Added Blaze kit</p><p>- Added Pillager kit</p><p>- Added 2nd floor</p><p>-01010011 01100101 01100011 01110010 01100101 01110100&nbsp;</p> </div>
+</div>
+
+<h3>Installation</h3>
+<p></p><p>iOS 12 and below- Download the .mcworld file and open it in Minecraft</p><p>iOS
+ 13- Download the zip file to the files app, unzip the file and move the
+ folder to On my iPad/Minecraft/games/com.mojang/worlds folder</p><p></p>
+<h3>Downloads</h3>
+<ul id="download-list">
+<li><a href="https://web.archive.org/web/20201031164118/http://www.mediafire.com/file/ck92h39p9l7etva/SKPVP_1.0.2.zip/file" target="_blank"><strong>iOS 13 Download (.zip)</strong></a></li>
+<li><a href="https://web.archive.org/web/20201031164118/http://www.mediafire.com/file/k7wlalewyj1s58l/SKPVP_1.0.2.mcworld/file" target="_blank"><strong>iOS 12 download</strong></a></li>
+</ul>
+<h3>Supported Minecraft versions</h3>
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/version/1-10/" rel="minecraft version" class="guide-link">1.10</a>
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/version/1-11/" rel="minecraft version" class="guide-link">1.11</a>
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/version/1-12/" rel="minecraft version" class="guide-link">1.12</a>
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/version/1-13/" rel="minecraft version" class="guide-link">1.13</a>
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/version/1-8/" rel="minecraft version" class="guide-link">1.8</a>
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/version/1-9-beta/" rel="minecraft version" class="guide-link">1.9</a>
+
+
+
+ </div>
+<div class="clear"></div>
+</div>
+</div>
+</article>
+ <script type="application/ld+json">
+                {
+                "@context": "https://web.archive.org/web/20201031164118/http://schema.org",
+                "@type": "CreativeWork",
+                "about": "Minecraft Pocket Edition",
+                        "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5",
+                    "bestRating": "5",
+                            "reviewCount": "2"
+                    },
+                    "commentCount": "6",
+                "dateModified": "2019-10-26T11:28:45Z",
+                "datePublished": "2019-10-21T11:56:17Z",
+                "name": "Sonic Kit PvP"
+                }
+            </script>
+<div id="not-ads-page">
+<div id="div-gpt-ad-1583174787470-4" class="ads-j-center"></div>
+</div>
+<script>
+jQuery(function ($) {
+ $(document).ready(function() {
+        if(window.location.pathname == '/about/' || 
+        window.location.pathname == '/contact/' ||
+        window.location.pathname == '/privacy-policy/' ||
+        window.location.pathname == '/how-to-install-minecraft-pe-maps-for-android/'){
+            let ads = document.getElementById('not-ads-page');
+            ads.remove();
+        }
+    });
+});
+</script>
+<p class="post-tags"><span>Tags:</span> <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/mcworld/" rel="tag">.MCWorld</a><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/tag/pvp-maps/" rel="tag">PvP Maps</a></p>
+<h4 class="heading">
+<i class="fa fa-hand-o-right"></i>You may also like...</h4>
+<ul class="related-posts group">
+<li class="related post-hover">
+<article class="post-155249 addon type-addon status-publish has-post-thumbnail hentry category-addons category-mods version-1-16">
+<div class="post-thumbnail">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/random-food-addon/" title="Random Food Addon">
+<img width="520" height="245" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/random-food-addon_1-520x245.png" class="attachment-thumb-medium size-thumb-medium wp-post-image" alt="" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/random-food-addon_1-520x245.png 520w, Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/random-food-addon_1-300x142.png 300w, Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/random-food-addon_1.png 720w" sizes="(max-width: 520px) 100vw, 520px"> </a>
+</div>
+<div class="related-inner">
+<h4 class="post-title">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/random-food-addon/" rel="bookmark" title="Random Food Addon">Random Food Addon</a>
+</h4>
+<div class="post-meta group">
+<p class="post-date">17 Aug, 2020</p>
+</div>
+</div>
+</article>
+</li>
+<li class="related post-hover">
+<article class="post-161357 addon type-addon status-publish has-post-thumbnail hentry category-addons category-mods version-1-16">
+<div class="post-thumbnail">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/terraria-potions-addon/" title="Terraria Potions in Minecraft! v1.0.0">
+<img width="520" height="245" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/terraria-potions-in-minecraft-v100_1-520x245.png" class="attachment-thumb-medium size-thumb-medium wp-post-image" alt="" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/terraria-potions-in-minecraft-v100_1-520x245.png 520w, Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/terraria-potions-in-minecraft-v100_1-300x142.png 300w, Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/terraria-potions-in-minecraft-v100_1.png 720w" sizes="(max-width: 520px) 100vw, 520px"> </a>
+</div>
+<div class="related-inner">
+<h4 class="post-title">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/terraria-potions-addon/" rel="bookmark" title="Terraria Potions in Minecraft! v1.0.0">Terraria Potions in Minecraft! v1.0.0</a>
+</h4>
+<div class="post-meta group">
+<p class="post-date">15 Oct, 2020</p>
+</div>
+</div>
+</article>
+</li>
+<li class="related post-hover">
+<article class="post-158550 addon type-addon status-publish has-post-thumbnail hentry category-addons category-mods version-1-16">
+<div class="post-thumbnail">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/minecraft-but-its-underwater-addon/" title="Minecraft, But It’s Underwater v1.0.0">
+<img width="520" height="245" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/minecraft-but-its-underwater-v100_1-520x245.png" class="attachment-thumb-medium size-thumb-medium wp-post-image" alt="" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/minecraft-but-its-underwater-v100_1-520x245.png 520w, Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/minecraft-but-its-underwater-v100_1-300x142.png 300w, Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/minecraft-but-its-underwater-v100_1.png 720w" sizes="(max-width: 520px) 100vw, 520px"> </a>
+</div>
+<div class="related-inner">
+<h4 class="post-title">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/minecraft-but-its-underwater-addon/" rel="bookmark" title="Minecraft, But It’s Underwater v1.0.0">Minecraft, But It’s Underwater v1.0.0</a>
+</h4>
+<div class="post-meta group">
+<p class="post-date">21 Sep, 2020</p>
+</div>
+</div>
+</article>
+</li>
+</ul>
+<ul class="related-ad group" id="advertising">
+</ul>
+
+<div class="guide-wrapper"><h4 class="heading">Installation Guides</h4><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-maps-for-android/" class="guide-link">Android</a><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/how-to-install-minecraft-pe-maps-for-ios/" class="guide-link">iOS</a><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/install-maps-minecraft-windows-10-edition/" class="guide-link">Windows 10</a></div>
+<section id="comments" class="themeform">
+<h3 class="heading">6 Responses</h3>
+<ul class="comment-tabs group">
+<li class="active"><a href="#commentlist-container"><i class="fa fa-comments-o"></i>Comments<span>6</span></a></li>
+</ul>
+<div class="and_rating_wrapper"><div class="crfp-average-rating"><div class="and_rating_stars"><span class="dashicons dashicons-star-filled and_star"></span><span class="dashicons dashicons-star-filled and_star"></span><span class="dashicons dashicons-star-filled and_star"></span><span class="dashicons dashicons-star-filled and_star"></span><span class="dashicons dashicons-star-filled and_star"></span></div>
+<div class="and_rating_text">5 / 5 (2 votes)</div>
+</div>
+
+</div>
+<div id="commentlist-container" class="comment-tab">
+<ol class="commentlist">
+<li class="comment even thread-even depth-1" id="comment-299687"> <div id="div-comment-299687" class="comment-body"> <div class="comment-author vcard"><img alt="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/none_002.jpg" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/none.jpg 2x" class="avatar avatar-96 photo avatar-default" height="96" width="96"><cite class="fn">Oli</cite> <span class="says">says:</span> </div> <div class="comment-meta commentmetadata">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/#comment-299687">February 2, 2020 at 11:20 am </a> </div>
+<p>How to setup?</p>
+<div class="and_single_comment_rating"></div>
+<div class="reply"><a rel="nofollow" class="comment-reply-login" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">Log in to Reply</a> </div> </div></li>
+<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-291551"> <div id="div-comment-291551" class="comment-body"> <div class="comment-author vcard"><img alt="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/none_002.jpg" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/none.jpg 2x" class="avatar avatar-96 photo avatar-default" height="96" width="96"><cite class="fn">Anonymous</cite> <span class="says">says:</span> </div> <div class="comment-meta commentmetadata">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/#comment-291551">January 3, 2020 at 3:02 pm </a> </div>
+<p>Yhn nnh</p>
+<div class="and_single_comment_rating"></div>
+<div class="reply"><a rel="nofollow" class="comment-reply-login" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">Log in to Reply</a> </div> </div></li>
+<li class="comment even thread-even depth-1" id="comment-277632"> <div id="div-comment-277632" class="comment-body"> <div class="comment-author vcard"><img alt="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/none_002.jpg" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/none.jpg 2x" class="avatar avatar-96 photo avatar-default" height="96" width="96"><cite class="fn">Anonymous</cite> <span class="says">says:</span> </div> <div class="comment-meta commentmetadata">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/#comment-277632">November 12, 2019 at 10:24 pm </a> </div>
+<p>The Binary code is translated<br>
+To<br>
+Secret</p>
+<div class="and_single_comment_rating"><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span></div>
+<div class="reply"><a rel="nofollow" class="comment-reply-login" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">Log in to Reply</a> </div> </div></li>
+<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-276162"> <div id="div-comment-276162" class="comment-body"> <div class="comment-author vcard"><img alt="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/36dbbe7f68bbc11c024f355c86f4bc84_002.jpg" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/36dbbe7f68bbc11c024f355c86f4bc84.jpg 2x" class="avatar avatar-96 photo" height="96" width="96"><cite class="fn">Zachary</cite> <span class="says">says:</span> </div> <div class="comment-meta commentmetadata">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/#comment-276162">November 8, 2019 at 3:14 am </a> </div>
+<p>Hey, before I download this is there a shop?</p>
+<div class="and_single_comment_rating"><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span></div>
+<div class="reply"><a rel="nofollow" class="comment-reply-login" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">Log in to Reply</a> </div> </div></li>
+<li class="comment even thread-even depth-1 parent" id="comment-271648"> <div id="div-comment-271648" class="comment-body"> <div class="comment-author vcard"><img alt="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/4795e43490007102f3be5e8211f2db24_002.jpg" srcset="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/4795e43490007102f3be5e8211f2db24.jpg 2x" class="avatar avatar-96 photo" height="96" width="96"><cite class="fn">Zane</cite> <span class="says">says:</span> </div> <div class="comment-meta commentmetadata">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/#comment-271648">October 24, 2019 at 8:59 pm </a> </div>
+<p>I think you should make it available for windows 10, and xbox.</p>
+<div class="and_single_comment_rating"></div>
+<div class="reply"><a rel="nofollow" class="comment-reply-login" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">Log in to Reply</a> </div> </div><ul class="children">
+<li class="comment byuser comment-author-popularsonic bypostauthor odd alt depth-2" id="comment-272001"> <div id="div-comment-272001" class="comment-body"> <div class="comment-author vcard"><img src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/423fd709007d6749af06341a9751a9a4.png" width="96" height="96" alt=""><cite class="fn"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" rel="external nofollow ugc" class="url">Popularsonic</a></cite> <span class="says">says:</span> </div> <div class="comment-meta commentmetadata">
+<a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/#comment-272001">October 26, 2019 at 5:25 am </a> </div>
+<p>It should 100% be available to windows 10 and Xbox one as well, For 
+windows 10 you can use .mcworld .mcpack and other Minecraft related 
+files (except for mod packages of course) to get the file into 
+Minecraft, for Xbox, you can download the zip file and do all the steps 
+to get the map on the Xbox.</p>
+<div class="and_single_comment_rating"></div>
+<div class="reply"><a rel="nofollow" class="comment-reply-login" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">Log in to Reply</a> </div> </div></li>
+</ul>
+</li>
+ </ol>
+</div>
+<div id="respond" class="comment-respond">
+<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/?cookie_check=1#respond" style="display:none;">Cancel reply</a></small></h3><p class="must-log-in">You must be <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-login.php?redirect_to=https%3A%2F%2Fmcpedl.com%2Fsonic-kit-pvp%2F">logged in</a> to post a comment.</p> </div>
+</section>
+</div>
+</section>
+<div class="sidebar s1">
+<a class="sidebar-toggle" title="Expand Sidebar"><i class="fa icon-sidebar-toggle"></i></a>
+<div class="sidebar-content">
+<div class="sidebar-top group">
+<p>Follow:</p>
+<ul class="social-links"><li><a rel="nofollow" class="social-tooltip" title="Twitter" href="https://web.archive.org/web/20201031164118/https://twitter.com/mcpedl" target="_blank"><i class="fa fa-twitter"></i></a></li><li><a rel="nofollow" class="social-tooltip" title="Facebook" href="https://web.archive.org/web/20201031164118/https://www.facebook.com/MCPE-DL-932160150162761/" target="_blank"><i class="fa fa-facebook"></i></a></li><li><a rel="nofollow" class="social-tooltip" title="Instagram" href="https://web.archive.org/web/20201031164118/https://www.instagram.com/mcpedlcom/" target="_blank"><i class="fa fa-instagram"></i></a></li><li><a rel="nofollow" class="social-tooltip" title="Email" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/contact/" target="_blank"><i class="fa fa-envelope"></i></a></li></ul> </div>
+<div id="sso_widget-6" class="widget widget_sso_widget">
+<a class="btn btn-success" title="Login" href="https://web.archive.org/web/20201031164118/https://my.mcpedl.com/login?return_url=https%3A%2F%2Fmcpedl.com&amp;session_id=&amp;sum=4fbe79a33ea87fcd2b6110351d67c4a29a05d52530e714c9dce52cbed0439c42">Login</a>
+<a class="btn btn-info" title="Sign Up" href="https://web.archive.org/web/20201031164118/https://my.mcpedl.com/register" target="_blank">Sign Up</a>
+<a class="btn btn-info-subm" title="Submission" href="https://web.archive.org/web/20201031164118/https://my.mcpedl.com/submit" target="_blank">Submission</a>
+</div><div id="search-2" class="widget widget_search"><form method="get" class="searchform themeform" action="https://web.archive.org/web/20201031164118/https://mcpedl.com/">
+<div>
+<input type="text" class="search" name="s" onblur="if(this.value=='')this.value='To search type and hit enter';" onfocus="if(this.value=='To search type and hit enter')this.value='';" value="To search type and hit enter">
+</div>
+</form></div><div id="text-5" class="widget widget_text"> <div class="textwidget"><div id="div-gpt-ad-1583174787470-1" class="ads-j-center ads-padding"></div>
+<div id="div-gpt-ad-1583174787470-2" class="ads-j-center"></div>
+</div>
+</div><div id="text-4" class="widget widget_text"> <div class="textwidget"><p><a class="twitter-timeline" href="https://web.archive.org/web/20201031164118/https://twitter.com/MCPEDL?ref_src=twsrc%5Etfw" data-height="450">Tweets by MCPEDL</a> <script async="" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/widgets.js" charset="utf-8"></script><br>
+</p>
+</div>
+</div><div id="recent-comments-2" class="widget widget_recent_comments"><h3>Miners Talking</h3><ul id="recentcomments"><li class="recentcomments"><span class="comment-author-link"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" rel="external nofollow ugc" class="url">Spyguy10078</a></span> on <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/mcbe-among-us/#comment-437257">MCBE Among Us</a></li><li class="recentcomments"><span class="comment-author-link"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" rel="external nofollow ugc" class="url">Flaming Phoenix</a></span> on <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/kalos-legnendary-pokemon-addon/#comment-437256">Kalos Legnendary Pokemon Addon</a></li><li class="recentcomments"><span class="comment-author-link"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" rel="external nofollow ugc" class="url">Eldeston</a></span> on <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/estn-shaders/#comment-437255">ESTN Shaders Official Release</a></li><li class="recentcomments"><span class="comment-author-link"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" rel="external nofollow ugc" class="url">Zacek el Serpentín</a></span> on <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/serp-pokemon-addon/#comment-437254">SERP Pokémon (Addon)</a></li><li class="recentcomments"><span class="comment-author-link"><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/user/popularsonic" rel="external nofollow ugc" class="url">drackaflame99</a></span> on <a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/scp-js-edition-addon/#comment-437253">SCP: Collaboration</a></li></ul></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer id="footer">
+<section class="container" id="footer-bottom">
+<div class="container-inner">
+<a id="back-to-top" href="#"><i class="fa fa-angle-up"></i></a>
+<div class="pad group">
+<div class="grid one-half">
+<div id="copyright">
+<p>© 2014-2020 MCPEDL.com.<br>We are not affiliated with Mojang AB.<br><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/privacy-policy/">Privacy Policy</a><br><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/my-subscriptions/">Subscriptions</a><br><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/contact/">Contact Us</a><br><a href="https://web.archive.org/web/20201031164118/https://mcpedl.com/about/">About Us</a></p>
+</div>
+</div>
+<div class="grid one-half last">
+<ul class="social-links"><li><a rel="nofollow" class="social-tooltip" title="Twitter" href="https://web.archive.org/web/20201031164118/https://twitter.com/mcpedl" target="_blank"><i class="fa fa-twitter"></i></a></li><li><a rel="nofollow" class="social-tooltip" title="Facebook" href="https://web.archive.org/web/20201031164118/https://www.facebook.com/MCPE-DL-932160150162761/" target="_blank"><i class="fa fa-facebook"></i></a></li><li><a rel="nofollow" class="social-tooltip" title="Instagram" href="https://web.archive.org/web/20201031164118/https://www.instagram.com/mcpedlcom/" target="_blank"><i class="fa fa-instagram"></i></a></li><li><a rel="nofollow" class="social-tooltip" title="Email" href="https://web.archive.org/web/20201031164118/https://mcpedl.com/contact/" target="_blank"><i class="fa fa-envelope"></i></a></li></ul>
+</div>
+</div>
+</div>
+</section>
+</footer>
+</div>
+<div id="su-footer-links" style="text-align: center;"></div><link rel="stylesheet" id="ws_bootsrap_css-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/boot-cont.css" type="text/css" media="all">
+<link rel="stylesheet" id="ws_front_css-css" href="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/front.css" type="text/css" media="all">
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/frontend.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wpcf7 = {"apiSettings":{"root":"https:\/\/web.archive.org\/web\/20201031164118\/https:\/\/mcpedl.com\/wp-json\/contact-form-7\/v1","namespace":"contact-form-7\/v1"},"cached":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/scripts_002.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/scripts.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/comment-reply.min.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/wp-embed.min.js"></script>
+<script type="text/javascript" src="Sonic%20Kit%20PvP%20Minecraft%20PE%20Maps_files/OneSignalSDK.js" async="async"></script>
+<!--[if lt IE 9]>
+<script src="https://mcpedl.com/wp-content/themes/hueman/js/ie/respond.js"></script>
+<![endif]-->
+<script>
+jQuery( document ).ready( function($) {
+	$('.bawpvc-ajax-counter').each( function( i ) {
+		var $id = $(this).data('id');
+		var t = this;
+		var n = 1;
+		$.get('https://web.archive.org/web/20201031164118/https://mcpedl.com/wp-admin/admin-ajax.php?action=bawpvc-ajax-counter&p='+$id+'&n='+n, function( html ) {
+			$(t).html( html );
+		})
+	});
+});
+</script>
+
+
+<iframe scrolling="no" frameborder="0" allowtransparency="true" src="https://web.archive.org/web/20201031164118/https://platform.twitter.com/widgets/widget_iframe.96fd96193cc66c3e11d4c5e4c7c7ec97.html?origin=https%3A%2F%2Fmcpedl.com" title="Twitter settings iframe" style="display: none;" allow="autoplay 'self'; fullscreen 'self'" data-ruffle-polyfilled=""></iframe><iframe style="display: none; position: absolute; width: 1px; height: 1px; top: -9999px;" name="__uspapiLocator" tabindex="-1" role="presentation" aria-hidden="true" title="Blank" allow="autoplay 'self'; fullscreen 'self'" data-ruffle-polyfilled=""></iframe><iframe src="https://web.archive.org/web/20201101180327/https://c.sharethis.mgr.consensu.org/portal-v2.html" id="st_gdpr_iframe" title="GDPR Consent Management" style="width: 0px; height: 0px; position: absolute; left: -5000px;" allow="autoplay 'self'; fullscreen 'self'" data-ruffle-polyfilled=""></iframe><iframe style="position: absolute; width: 1px; height: 1px; top: -9999px;" tabindex="-1" role="presentation" aria-hidden="true" title="Blank" allow="autoplay 'self'; fullscreen 'self'" src="https://web.archive.org/web/20201031164602/https://consentcdn.cookiebot.com/sdk/bc.min.html" data-ruffle-polyfilled=""></iframe><div id="stcpDiv" style="position: absolute; top: -1999px; left: -1988px;">ShareThis Copy and Paste</div><div id="stwrapper" class="stwrapper stwrapper5x stwrapper5x" style="display: none;"><iframe allowtransparency="true" id="stLframe" class="stLframe" name="stLframe" frameborder="0" scrolling="no" src="https://web.archive.org/web/20201101180248/https://ws.sharethis.com/secure5x/index.html" allow="autoplay 'self'; fullscreen 'self'" data-ruffle-polyfilled=""></iframe></div><div id="stOverlay" onclick="javascript:stWidget.closeWidget();"></div></body></html>
+<!--
+     FILE ARCHIVED ON 16:41:18 Oct 31, 2020 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 07:47:52 Jan 22, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  captures_list: 107.567 (11)
+  exclusion.robots: 0.218
+  exclusion.robots.policy: 0.207
+  cdx.remote: 0.063
+  esindex: 0.01
+  LoadShardBlock: 75.84 (3)
+  PetaboxLoader3.datanode: 54.919 (4)
+  load_resource: 137.376
+  PetaboxLoader3.resolve: 92.837
+-->

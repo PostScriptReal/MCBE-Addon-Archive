@@ -1,0 +1,21 @@
+#subscription{position:relative;float:right}#member-title #subscription{margin-left:10px;margin-bottom:10px}#subscribe-button,#my-subscriptions .subscribe-button{text-transform:uppercase;font-weight:700;opacity:1;transition:.2s;background:#59b359;border-radius:3px;outline:none;margin-right:0;cursor:pointer;position:relative}#subscribe-button:hover,#my-subscriptions .subscribe-button:hover{opacity:.9}#subscribe-button.active,#my-subscriptions .subscribe-button.active{background:#eaeaea;color:#919191!important}#subscribe-button+.tip,#my-subscriptions .subscribe-button+.tip{display:none;position:absolute;bottom:-32px;right:0;width:max-content;text-transform:none;border:1px solid #ccc;border-radius:3px;-webkit-border-radius:3px;padding:0 5px;background-color:#fefefe;color:#666;font-size:.8em;box-shadow:0 0 10px 0}#subscribe-button:hover+.tip,#my-subscriptions .subscribe-button:hover+.tip{display:inline;z-index:2}#subscribe-button i,#my-subscriptions button i{margin-right:3px}#subscribe-button span{color:#919191;background:#eaeaea;position:absolute;right:-2px;top:-2px;line-height:25px;text-align:center;width:35px;border:2px solid #ccc;border-top-right-radius:3px;border-bottom-right-radius:3px;font-weight:400}#member-title #subscribe-button{padding-right:45px;text-transform:none;line-height:25px;padding-bottom:0;padding-top:0;border-width:2px}#my-subscriptions .subscribe-button{float:right;font-size:13px}#my-subscriptions li{position:relative;margin-bottom:7px;display:flex;justify-content:space-between;line-height:30px}#my-subscriptions li::before{color:#000;content:"\2022";font-size:26px;font-weight:700;left:-15px;line-height:30px;position:absolute;top:0}
+/*
+     FILE ARCHIVED ON 18:03:27 Nov 01, 2020 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 07:42:22 Jan 22, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 61.111
+  exclusion.robots: 0.066
+  exclusion.robots.policy: 0.058
+  cdx.remote: 0.046
+  esindex: 0.007
+  LoadShardBlock: 37.594 (3)
+  PetaboxLoader3.datanode: 46.429 (4)
+  load_resource: 40.97
+  PetaboxLoader3.resolve: 28.015
+*/

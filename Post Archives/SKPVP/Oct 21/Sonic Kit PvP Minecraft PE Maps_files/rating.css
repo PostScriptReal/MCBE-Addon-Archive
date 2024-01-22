@@ -1,0 +1,21 @@
+span.star-rating-control{display:inline-block;margin:0 0 10px}div.rating-cancel,div.star-rating{float:left;width:22px;height:20px;text-indent:-999em;cursor:pointer;display:block;background:0 0;overflow:hidden}div.rating-cancel,div.rating-cancel a{background:url(/web/20191021164602im_/https://mcpedl.com/wp-content/plugins/and_comment-rating-field-plugin/images/delete.png) no-repeat 0 -20px;background-size:20px}div.star-rating,div.star-rating a{background:url(/web/20191021164602im_/https://mcpedl.com/wp-content/plugins/and_comment-rating-field-plugin/images/zvjezdice_big.png) no-repeat 0 0;background-size:20px}div.rating-cancel a,div.star-rating a{display:block;width:20px;height:100%;background-position:0 0;border:0}div.rating-cancel{top:1px;position:relative}div.star-rating-on a{background-position:0 -20px!important}div.star-rating-hover a{background-position:0 -40px}div.star-rating-readonly a{cursor:default!important}div.star-rating{background:0 0!important;overflow:hidden!important}#commentform .crfp-field{float:left;padding-top:20px}#commentform .crfp-field label{position:relative;top:-15px;display:inline-block;margin-right:10px}@media all and (max-width:800px){div.rating-cancel,div.star-rating{width:37px;height:35px}div.rating-cancel,div.rating-cancel a{background:url(/web/20191021164602im_/https://mcpedl.com/wp-content/plugins/and_comment-rating-field-plugin/images/delete.png) no-repeat 0 -35px;background-size:35px}div.star-rating,div.star-rating a{background:url(/web/20191021164602im_/https://mcpedl.com/wp-content/plugins/and_comment-rating-field-plugin/images/zvjezdice_big.png) no-repeat 0 0;background-size:35px}div.rating-cancel a,div.star-rating a{width:35px}div.star-rating-on a{background-position:0 -35px!important}div.star-rating-hover a{background-position:0 -70px}}div.rating{width:80px;height:16px;margin:5px 0 10px}div.crfp-rating{width:80px;height:16px;background:url(/web/20191021164602im_/https://mcpedl.com/wp-content/plugins/and_comment-rating-field-plugin/images/star.gif) 0 -32px repeat-x;text-indent:-9999px;overflow:hidden}div.crfp-rating-5{width:80px!important}div.crfp-rating-4{width:64px!important}div.crfp-rating-3{width:48px!important}div.crfp-rating-2{width:32px!important}div.crfp-rating-1{width:16px!important}div.crfp-rating-0{width:0!important}
+/*
+     FILE ARCHIVED ON 16:46:02 Oct 21, 2019 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 07:49:01 Jan 22, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 118.384
+  exclusion.robots: 0.081
+  exclusion.robots.policy: 0.071
+  cdx.remote: 0.062
+  esindex: 0.01
+  LoadShardBlock: 71.634 (3)
+  PetaboxLoader3.datanode: 119.21 (4)
+  load_resource: 142.422
+  PetaboxLoader3.resolve: 71.978
+*/

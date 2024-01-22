@@ -1,0 +1,21 @@
+.post-row article.type-addon,.post-row article.type-modpe,.post-row article.type-seed,.post-row article.type-skinpack,.post-row article.type-texturepack,.post-row article.type-world,.post-row article.type-script{float:left;width:50%;margin-bottom:40px}@media screen and (max-width:719px){.post-row article.type-addon,.post-row article.type-modpe,.post-row article.type-seed,.post-row article.type-skinpack,.post-row article.type-texturepack,.post-row article.type-world,.post-row article.type-script{float:none;width:auto}}.home .post-row article.type-skin img,.search .post-row article.type-skin img,.author .post-row article.type-skin img{width:60%}.search.post-type-archive .post-row article.type-skin img{width:50%}.addon .post-title,.modpe .post-title,.seed .post-title,.skinpack .post-title,.texturepack .post-title,.world .post-title,.script .post-title{margin-bottom:0}.addon .post-date,.modpe .post-date,.seed .post-date,.skinpack .post-date,.texturepack .post-date,.world .post-date,.script .post-date{text-transform:uppercase;font-size:14px;font-weight:400;color:#bbb}#changelogs{margin-top:15px;margin-bottom:15px;border:1px solid #eee;border-radius:5px}.changelog-header{border-bottom:1px solid #eee;padding:5px 10px}.changelog-header i{margin-left:5px}.spoiler-link{display:none}.spoiler-link a{color:inherit}.changelog{display:none;transition:.5s;padding:5px 10px}.changelog *{margin-bottom:0!important;padding-bottom:0!important}.changelog.active{display:block}#claim-post{text-shadow:0 -1px 0 rgba(0,0,0,.25);background-color:#5bb75b;background-image:-moz-linear-gradient(top,#62c462,#51a351);background-image:-webkit-gradient(linear,0 0,0 100%,from(#62c462),to(#51a351));background-image:-webkit-linear-gradient(top,#62c462,#51a351);background-image:-o-linear-gradient(top,#62c462,#51a351);background-image:linear-gradient(to bottom,#62c462,#51a351);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462',endColorstr='#ff51a351',GradientType=0);border-width:1px;margin:8px auto;font-size:18px}
+/*
+     FILE ARCHIVED ON 18:03:27 Nov 01, 2020 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 07:42:22 Jan 22, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 113.314
+  exclusion.robots: 0.082
+  exclusion.robots.policy: 0.071
+  cdx.remote: 0.064
+  esindex: 0.008
+  LoadShardBlock: 70.48 (3)
+  PetaboxLoader3.datanode: 60.237 (4)
+  PetaboxLoader3.resolve: 49.945 (2)
+  load_resource: 60.867
+*/

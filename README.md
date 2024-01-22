@@ -2,7 +2,7 @@
 This is an archive of my old MCPEDL content created from my time making addons for MCBE around 2019-2021
 ## UPDATE!!!
 Thanks to Internet Archive's Common Crawl Web Crawler, there are now archived versions available for the Parkour+ and SKPVP pages!
-Links to the archive versions here: [Parkour+](https://web.archive.org/web/20201031152917/https://mcpedl.com/parkour-1/?cookie_check=1), [SKPVP](https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/?cookie_check=1).
+Links to the archive versions here: [Parkour+](https://web.archive.org/web/20201031152917/https://mcpedl.com/parkour-1/?cookie_check=1), [SKPVP](https://web.archive.org/web/20201031164118/https://mcpedl.com/sonic-kit-pvp/?cookie_check=1). Saved versions of the archived pages are available in the archive.
 ## Notes
 1. Parkour+ 1.0.0, 1.0.1 and SKPVP 1.0.0 and 1.0.1 is currently lost and I do not have the original files myself.
 2. The original pages for Parkour+ and SKPVP aren't available on MCPEDL anymore as you can see on my old account page [here](https://mcpedl.com/user/popularsonic/)
